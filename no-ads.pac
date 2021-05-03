@@ -20,7 +20,7 @@
 //
 // ("no monies exchanged" in Copyright clause removed 11/2001)
 //
-var noadsver = "$Id: no-ads.pac,v 6.10 2021/03/26 13:43:28 loverso Exp loverso $";
+var noadsver = "$Id: no-ads.pac,v 6.9 2020/11/23 14:17:53 loverso Exp loverso $";
 
 // ****
 // **** If you do not use a proxy to access the Internet, then the following
@@ -31,11 +31,10 @@ var noadsver = "$Id: no-ads.pac,v 6.10 2021/03/26 13:43:28 loverso Exp loverso $
 // **** "DIRECT" with "PROXY hostname:port", using the correct hostname:port
 // **** for your proxy server.
 // ****
-// Added By Aaron
+
 var normal = "DIRECT";
-//	var normal = "PROXY 10.40.162.94:11680";
-	var BarlowsFam_Proxy = "DIRECT"
-	var UK_Proxy = "DIRECT"
+var BarlowsFam_Proxy = "DIRECT"
+var UK_Proxy = "DIRECT"
 
 // ***
 // *** If you are not using a blackhold proxy, then you can leave this
@@ -46,11 +45,9 @@ var normal = "DIRECT";
 // *** BHP for Windows, you need to change the "0.0.0.0" to "127.0.0.1"
 // ***
 //var blackhole = "PROXY 0.0.0.0:3421";
-	// Added By Aaron - Force Blackhold = Direct unless using http, https, ftp, and rsync.  This is done below.
 // var blackhole = "PROXY 255.255.255.0:3421";
+	// Added By Aaron - Force Blackhole = Direct unless using http, https, ftp, and rsync.  This is done below.
 	var blackhole = "DIRECT";
-
-
 // Safari/MacOS needs the old value
 if (typeof(navigator) != "undefined"
 	&& navigator.appVersion.indexOf("Mac") != -1) {
@@ -534,7 +531,7 @@ var re_banner2 = /[/](?!no-ads)([^/]*?([^0-9/][^-/]))?(\b|[_])(ad[s]?)(\b|[_0-9]
 // ^(www\.)?(ad(?!(mission|visor|alur|iumx|ult|obe.*|min|sl|d|olly.*))|tology|pop|click(?!redblue)|cash|[^.]*banner|[^.]*adserv|.+\.ads?\.)
 //var re_adhost = /.../i;
 
-var re_adhost = /\b((new)?ad(?!(venture|vantage|am|mission|visor|alur|iumx|ult|vizia|obe|min|sl|d|olly|vance))|ads\b|adserv|pop(?!ular|corn|e)|click(?!orlando|redblue|andbuy|.reference)|cash(?!back|star|edge)|banner|bans)/i;
+var re_adhost = /\b((new)?ad(?!(venture|vantage|am|mission|visor|alur|iumx|ult|vizia|obe|min|sl|d|olly|vance))|ads\b|adserv|pop(?!ular|corn|e)|click(?!redblue|andbuy|.reference)|cash(?!back|star|edge)|banner|bans)/i;
 
 // http://www.afcyhf.com/image-1742473-10472361
 // http://www.tkqlhce.com/image-1742473-10510557
@@ -553,7 +550,7 @@ var re_crud = /www\.\w+\.com\/image-\d+-\d+$/;
 //	popup.foo.bar
 
 // matched against hostname
-var re_whitelist_domains = /(^|\.)(adfdevices\.com|adorama\.com|adafruit\..*|advogato\.org|adirondack\..*|kintera\.org|adp\.com|addons\.cdn\.mozilla\.net|adk46er\.org|adobe\.com|ad(fontesmedia|guard|muncher|week)\.com|ad(away|blockplus|tidy)\.org|lego\.com|dell\.com|mozdev\.org|mozilla\.org|fidelity\.com|tirerack\.com|titantv\.com|lala\.com|sprintpcs\.com|sprint\.com|nextel\.com|verizon\.com|vupload\.facebook\.com|mididb\.com|sony\.tv|market\.android\.com|weeklyad\.staples\.com|google\.com|googleadservices\.com|gmail\.com|gstatic\.com|thetvdb\.com|wikimedia\.org|css\.slickdealscdn\.com|newegg\.com|androiddrawer\.com|wsj\.com|massdrop\.com|cloudfront\.net|ad.*\.rackcdn\.com|bankofamerica\.com\|office\.com|smarttiles\.click|solaredge\.com|smartthings\.com)$/i;
+var re_whitelist_domains = /(^|\.)(adfdevices\.com|adorama\.com|adafruit\..*|advogato\.org|adirondack\..*|kintera\.org|sprintpcs\.com|adp\.com|lego\.com|dell\.com|mozdev\.org|mozilla\.org|fidelity\.com|tirerack\.com|titantv\.com|lala\.com|sprint\.com|nextel\.com|verizon\.com|vupload\.facebook\.com|rit\.edu|mididb\.com|sony\.tv|market\.android\.com|weeklyad\.staples\.com|(code|plus|www|mail|apis|drive|docs)\.google\.com|googleadservices\.com|gmail\.com|gstatic\.com|thetvdb\.com|bits\te.wikimedia\.org|css\.slickdealscdn\.com|newegg\.com|androiddrawer\.com|addons\.cdn\.mozilla\.net|wsj\.com|massdrop\.com|cloudfront\.net|ad.*\.rackcdn\.com|bankofamerica\.com\|office\.com|smarttiles\.click|solaredge\.com|smartthings\.com|adk46er\.org|adobe\.com|ad(fontesmedia|guard|muncher|week)\.com|ad(away|blockplus|tidy)\.org)$/i;
 // http://adc8aa2d5893f5ce5bf9-b0fbfd775b6f5cda8694c34759b81cf5.r65.cf2.rackcdn.com/39060.png
 
 
@@ -574,6 +571,9 @@ function FindProxyForURL(url, host)
 					url = url.toLowerCase();
 					host = host.toLowerCase();
 
+					// alert("This is a test message");
+					
+
 					if (
 						url.substring(0, 5) == 'http:' ||
 						url.substring(0, 6) == 'https:' ||
@@ -588,6 +588,11 @@ function FindProxyForURL(url, host)
 					if (isPlainHostName(host) ||  dnsDomainIs(host,"localhost.localdomain") ) {
 						return "DIRECT";
 					} 
+
+					if ( isInNet(myIpAddress(), "10.40.0.0", "255.255.0.0") ) 	{
+						normal = "PROXY 10.40.162.94:11680";
+					}
+
 
 					if (
 						isInNet(host, "127.0.0.0", "255.0.0.0") || isInNet(host, "10.0.0.0", "255.0.0.0") || isInNet(host, "172.16.0.0", "255.240.0.0")  || isInNet(host, "192.168.0.0", "255.255.0.0")
@@ -792,7 +797,6 @@ function FindProxyForURL(url, host)
 	  // || shExpMatch(host, '*.adt.com') || shExpMatch(host, 'adt.com') || dnsDomainIs(host, '.adt.com') || dnsDomainIs(host, 'adt.com')
 		// Added By Aaron - EasyPeasy Banner
 	  || shExpMatch(host, '*.lamersfam.com') || shExpMatch(host, 'lamersfam.com') || dnsDomainIs(host, '.lamersfam.com') || dnsDomainIs(host, 'lamersfam.com')
-
 
 	// Note: whitelisting schooner.com will defeat the "is-it-working"
 	// test page at http://www.schooner.com/~loverso/no-ads/ads/
@@ -1776,4 +1780,3 @@ function _dnsDomainIs(host, domain) {
 	//rightmedia.net
 	//calloffate.com
 	//fairmeasures.com
-

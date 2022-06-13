@@ -1,7 +1,3 @@
-//
-// SEARCH FOR "Added By Aaron" to find custom additions.
-//
-//
 //////////////////////////////////////////////////////////////////////////////
 //
 // John's No-ADS proxy auto configuration script
@@ -20,7 +16,7 @@
 //
 // ("no monies exchanged" in Copyright clause removed 11/2001)
 //
-var noadsver = "$Id: no-ads.pac,v 6.9 2020/11/23 14:17:53 loverso Exp loverso $";
+var noadsver = "$Id: no-ads.pac,v 6.10 2021/03/26 13:43:28 loverso Exp loverso $";
 
 // ****
 // **** If you do not use a proxy to access the Internet, then the following
@@ -31,10 +27,7 @@ var noadsver = "$Id: no-ads.pac,v 6.9 2020/11/23 14:17:53 loverso Exp loverso $"
 // **** "DIRECT" with "PROXY hostname:port", using the correct hostname:port
 // **** for your proxy server.
 // ****
-
 var normal = "DIRECT";
-var BarlowsFam_Proxy = "DIRECT"
-var UK_Proxy = "DIRECT"
 
 // ***
 // *** If you are not using a blackhold proxy, then you can leave this
@@ -45,15 +38,14 @@ var UK_Proxy = "DIRECT"
 // *** BHP for Windows, you need to change the "0.0.0.0" to "127.0.0.1"
 // ***
 //var blackhole = "PROXY 0.0.0.0:3421";
-// var blackhole = "PROXY 255.255.255.0:3421";
-	// Added By Aaron - Force Blackhole = Direct unless using http, https, ftp, and rsync.  This is done below.
-	var blackhole = "DIRECT";
+var blackhole = "PROXY 255.255.255.0:3421";
 // Safari/MacOS needs the old value
 if (typeof(navigator) != "undefined"
 	&& navigator.appVersion.indexOf("Mac") != -1) {
     blackhole = "PROXY 0.0.0.0:3421";
 }
-
+var blackhole_orig = blackhole
+blackhole = "DIRECT";
 
 // ***
 // *** If you need a different proxy to access local/internal hosts vs.
@@ -69,6 +61,8 @@ if (typeof(navigator) != "undefined"
 // *** rules to match your local/internal hosts.
 // ***
 var localproxy = normal;
+var BarlowsFam_Proxy = "DIRECT"
+var UK_Proxy = "DIRECT"
 
 // ***
 // *** If you need a socks proxy for some hosts, set it here.
@@ -531,7 +525,7 @@ var re_banner2 = /[/](?!no-ads)([^/]*?([^0-9/][^-/]))?(\b|[_])(ad[s]?)(\b|[_0-9]
 // ^(www\.)?(ad(?!(mission|visor|alur|iumx|ult|obe.*|min|sl|d|olly.*))|tology|pop|click(?!redblue)|cash|[^.]*banner|[^.]*adserv|.+\.ads?\.)
 //var re_adhost = /.../i;
 
-var re_adhost = /\b((new)?ad(?!(venture|vantage|am|mission|visor|alur|iumx|ult|vizia|obe|min|sl|d|olly|vance))|ads\b|adserv|pop(?!ular|corn|e)|click(?!redblue|andbuy|.reference)|cash(?!back|star|edge)|banner|bans)/i;
+var re_adhost = /\b((new)?ad(?!(venture|vantage|am|mission|visor|alur|iumx|ult|vizia|obe|min|sl|d|olly|vance))|ads\b|adserv|pop(?!ular|corn|e)|click(?!orlando|redblue|andbuy|.reference)|cash(?!back|star|edge)|banner|bans)/i;
 
 // http://www.afcyhf.com/image-1742473-10472361
 // http://www.tkqlhce.com/image-1742473-10510557
@@ -550,7 +544,7 @@ var re_crud = /www\.\w+\.com\/image-\d+-\d+$/;
 //	popup.foo.bar
 
 // matched against hostname
-var re_whitelist_domains = /(^|\.)(adfdevices\.com|adorama\.com|adafruit\..*|advogato\.org|adirondack\..*|kintera\.org|sprintpcs\.com|adp\.com|lego\.com|dell\.com|mozdev\.org|mozilla\.org|fidelity\.com|tirerack\.com|titantv\.com|lala\.com|sprint\.com|nextel\.com|verizon\.com|vupload\.facebook\.com|rit\.edu|mididb\.com|sony\.tv|market\.android\.com|weeklyad\.staples\.com|(code|plus|www|mail|apis|drive|docs)\.google\.com|googleadservices\.com|gmail\.com|gstatic\.com|thetvdb\.com|bits\te.wikimedia\.org|css\.slickdealscdn\.com|newegg\.com|androiddrawer\.com|addons\.cdn\.mozilla\.net|wsj\.com|massdrop\.com|cloudfront\.net|ad.*\.rackcdn\.com|bankofamerica\.com\|office\.com|smarttiles\.click|solaredge\.com|smartthings\.com|adk46er\.org|adobe\.com|ad(fontesmedia|guard|muncher|week)\.com|ad(away|blockplus|tidy)\.org)$/i;
+var re_whitelist_domains = /(^|\.)(adfdevices\.com|adorama\.com|adafruit\..*|advogato\.org|adirondack\..*|kintera\.org|adp\.com|addons\.cdn\.mozilla\.net|adk46er\.org|adobe\.com|ad(fontesmedia|guard|muncher|week)\.com|ad(away|blockplus|tidy)\.org|lego\.com|dell\.com|mozdev\.org|mozilla\.org|fidelity\.com|tirerack\.com|titantv\.com|lala\.com|sprintpcs\.com|sprint\.com|nextel\.com|verizon\.com|vupload\.facebook\.com|mididb\.com|sony\.tv|market\.android\.com|weeklyad\.staples\.com|google\.com|googleadservices\.com|gmail\.com|gstatic\.com|thetvdb\.com|wikimedia\.org|css\.slickdealscdn\.com|newegg\.com|androiddrawer\.com|wsj\.com|massdrop\.com|cloudfront\.net|ad.*\.rackcdn\.com|bankofamerica\.com\|office\.com|smarttiles\.click|solaredge\.com|smartthings\.com)$/i;
 // http://adc8aa2d5893f5ce5bf9-b0fbfd775b6f5cda8694c34759b81cf5.r65.cf2.rackcdn.com/39060.png
 
 
@@ -561,18 +555,7 @@ var isActive = 1;
 
 function FindProxyForURL(url, host)
 {
-//
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-//
-					// Added By Aaron - BarlowsFam & UK Proxy Servers
-					url = url.toLowerCase();
-					host = host.toLowerCase();
-
-					// alert("This is a test message");
-					
+    //DEBUG alert("checking: url=" + url);
 
 					if (
 						url.substring(0, 5) == 'http:' ||
@@ -581,18 +564,18 @@ function FindProxyForURL(url, host)
 						url.substring(0, 6) == 'rsync:'
 					)
 					{
-						// blackhole = "PROXY 10.40.162.98:110";
-						blackhole = "PROXY blocked.lamersfam.com:444";
+						blackhole = blackhole_orig
+					}
+
+					if ( isInNet(myIpAddress(), "10.40.0.0", "255.255.0.0") ) 	{
+						var skipping_local_ip_change = "Nothing";
+						// normal = "PROXY 10.40.162.94:11680";
+						// normal = "DIRECT";
 					}
 
 					if (isPlainHostName(host) ||  dnsDomainIs(host,"localhost.localdomain") ) {
 						return "DIRECT";
 					} 
-
-					if ( isInNet(myIpAddress(), "10.40.0.0", "255.255.0.0") ) 	{
-						normal = "PROXY 10.40.162.94:11680";
-					}
-
 
 					if (
 						isInNet(host, "127.0.0.0", "255.0.0.0") || isInNet(host, "10.0.0.0", "255.0.0.0") || isInNet(host, "172.16.0.0", "255.240.0.0")  || isInNet(host, "192.168.0.0", "255.255.0.0")
@@ -600,6 +583,18 @@ function FindProxyForURL(url, host)
 					
 					{
 						return "DIRECT";
+					}
+
+					if (
+						shExpMatch(host, '*.ip4.me') || shExpMatch(host, 'ip4.me') || dnsDomainIs(host, '.ip4.me') || dnsDomainIs(host, 'ip4.me') ||
+						shExpMatch(host, '*.ip6.me') || shExpMatch(host, 'ip6.me') || dnsDomainIs(host, '.ip6.me') || dnsDomainIs(host, 'ip6.me') ||
+						shExpMatch(host, '*.ip6only.me') || shExpMatch(host, 'ip6only.me') || dnsDomainIs(host, '.ip6only.me') || dnsDomainIs(host, 'ip6only.me') ||
+						shExpMatch(host, '*.ip6only')
+						)
+					{
+						if ( isInNet(myIpAddress(), "10.40.0.0", "255.255.0.0") ) 	{
+							return "PROXY 10.40.162.94:11680";
+						}
 					}
 
 					if (
@@ -623,7 +618,97 @@ function FindProxyForURL(url, host)
 						shExpMatch(host, '*.apple.com') || shExpMatch(host, 'apple.com') || dnsDomainIs(host, '.apple.com') || dnsDomainIs(host, 'apple.com') ||
 						shExpMatch(host, '*.apple.news') || shExpMatch(host, 'apple.news') || dnsDomainIs(host, '.apple.news') || dnsDomainIs(host, 'apple.news') ||
 						shExpMatch(host, '*.icloud-content.com') || shExpMatch(host, 'icloud-content.com') || dnsDomainIs(host, '.icloud-content.com') || dnsDomainIs(host, 'icloud-content.com') ||
-						shExpMatch(host, '*.gmail.com') || shExpMatch(host, 'gmail.com') || dnsDomainIs(host, '.gmail.com') || dnsDomainIs(host, 'gmail.com')
+						shExpMatch(host, '*.gmail.com') || shExpMatch(host, 'gmail.com') || dnsDomainIs(host, '.gmail.com') || dnsDomainIs(host, 'gmail.com') ||
+						shExpMatch(host, '*.fordpass.com') || shExpMatch(host, 'fordpass.com') || dnsDomainIs(host, '.fordpass.com') || dnsDomainIs(host, 'fordpass.com') ||
+						shExpMatch(host, '*.studyisland.com') || shExpMatch(host, 'studyisland.com') || dnsDomainIs(host, '.studyisland.com') || dnsDomainIs(host, 'studyisland.com') ||
+						shExpMatch(host, '*.platoweb.com') || shExpMatch(host, 'platoweb.com') || dnsDomainIs(host, '.platoweb.com') || dnsDomainIs(host, 'platoweb.com') ||
+						shExpMatch(host, '*.fonts.googleapis.com') || shExpMatch(host, 'fonts.googleapis.com') || dnsDomainIs(host, '.fonts.googleapis.com') || dnsDomainIs(host, 'fonts.googleapis.com') ||
+						shExpMatch(host, '*.speechstream.net') || shExpMatch(host, 'speechstream.net') || dnsDomainIs(host, '.speechstream.net') || dnsDomainIs(host, 'speechstream.net') ||
+						shExpMatch(host, '*.googletagmanager.com') || shExpMatch(host, 'googletagmanager.com') || dnsDomainIs(host, '.googletagmanager.com') || dnsDomainIs(host, 'googletagmanager.com') ||
+						shExpMatch(host, '*.edmentum.com') || shExpMatch(host, 'edmentum.com') || dnsDomainIs(host, '.edmentum.com') || dnsDomainIs(host, 'edmentum.com') ||
+						shExpMatch(host, '*.cloudfront.net') || shExpMatch(host, 'cloudfront.net') || dnsDomainIs(host, '.cloudfront.net') || dnsDomainIs(host, 'cloudfront.net') ||
+						shExpMatch(host, '*.app.edmentum.com') || shExpMatch(host, 'app.edmentum.com') || dnsDomainIs(host, '.app.edmentum.com') || dnsDomainIs(host, 'app.edmentum.com') ||
+						shExpMatch(host, '*.profitwell.com') || shExpMatch(host, 'profitwell.com') || dnsDomainIs(host, '.profitwell.com') || dnsDomainIs(host, 'profitwell.com') ||
+						shExpMatch(host, '*.platoweb.com') || shExpMatch(host, 'platoweb.com') || dnsDomainIs(host, '.platoweb.com') || dnsDomainIs(host, 'platoweb.com') ||
+						shExpMatch(host, '*.raz-kids.com') || shExpMatch(host, 'raz-kids.com') || dnsDomainIs(host, '.raz-kids.com') || dnsDomainIs(host, 'raz-kids.com') ||
+						shExpMatch(host, '*.kidsa-z.com') || shExpMatch(host, 'kidsa-z.com') || dnsDomainIs(host, '.kidsa-z.com') || dnsDomainIs(host, 'kidsa-z.com') ||
+						shExpMatch(host, '*.learninga-z.com') || shExpMatch(host, 'learninga-z.com') || dnsDomainIs(host, '.learninga-z.com') || dnsDomainIs(host, 'learninga-z.com') ||
+						shExpMatch(host, '*.reddit.com') || shExpMatch(host, 'reddit.com') || dnsDomainIs(host, '.reddit.com') || dnsDomainIs(host, 'reddit.com') ||
+						shExpMatch(host, '*.clearleap.com') || shExpMatch(host, 'clearleap.com') || dnsDomainIs(host, '.clearleap.com') || dnsDomainIs(host, 'clearleap.com') ||
+						shExpMatch(host, '*.youtube.be') || shExpMatch(host, 'youtube.be') || dnsDomainIs(host, '.youtube.be') || dnsDomainIs(host, 'youtube.be') ||
+						shExpMatch(host, '*.khanacademy.org') || shExpMatch(host, 'khanacademy.org') || dnsDomainIs(host, '.khanacademy.org') || dnsDomainIs(host, 'khanacademy.org') ||
+						shExpMatch(host, '*.ogp.me') || shExpMatch(host, 'ogp.me') || dnsDomainIs(host, '.ogp.me') || dnsDomainIs(host, 'ogp.me') ||
+						shExpMatch(host, '*.kastatic.org') || shExpMatch(host, 'kastatic.org') || dnsDomainIs(host, '.kastatic.org') || dnsDomainIs(host, 'kastatic.org') ||
+						shExpMatch(host, '*.youtube-nocookie.com') || shExpMatch(host, 'youtube-nocookie.com') || dnsDomainIs(host, '.youtube-nocookie.com') || dnsDomainIs(host, 'youtube-nocookie.com') ||
+						shExpMatch(host, '*.w3.og') || shExpMatch(host, 'w3.og') || dnsDomainIs(host, '.w3.og') || dnsDomainIs(host, 'w3.og') ||
+						shExpMatch(host, '*.schema.org') || shExpMatch(host, 'schema.org') || dnsDomainIs(host, '.schema.org') || dnsDomainIs(host, 'schema.org') ||
+						shExpMatch(host, '*.youtu.be') || shExpMatch(host, 'youtu.be') || dnsDomainIs(host, '.youtu.be') || dnsDomainIs(host, 'youtu.be') ||
+						shExpMatch(host, '*.ytimg.com') || shExpMatch(host, 'ytimg.com') || dnsDomainIs(host, '.ytimg.com') || dnsDomainIs(host, 'ytimg.com') ||
+						shExpMatch(host, '*.airpr.com') || shExpMatch(host, 'airpr.com') || dnsDomainIs(host, '.airpr.com') || dnsDomainIs(host, 'airpr.com') ||
+						shExpMatch(host, '*.kasandbox.org') || shExpMatch(host, 'kasandbox.org') || dnsDomainIs(host, '.kasandbox.org') || dnsDomainIs(host, 'kasandbox.org') ||
+						shExpMatch(host, '*.qualaroo.com') || shExpMatch(host, 'qualaroo.com') || dnsDomainIs(host, '.qualaroo.com') || dnsDomainIs(host, 'qualaroo.com') ||
+						shExpMatch(host, '*.amazonaws.com') || shExpMatch(host, 'amazonaws.com') || dnsDomainIs(host, '.amazonaws.com') || dnsDomainIs(host, 'amazonaws.com') ||
+						shExpMatch(host, '*.colorado.edu') || shExpMatch(host, 'colorado.edu') || dnsDomainIs(host, '.colorado.edu') || dnsDomainIs(host, 'colorado.edu') ||
+						shExpMatch(host, '*.discover.com') || shExpMatch(host, 'discover.com') || dnsDomainIs(host, '.discover.com') || dnsDomainIs(host, 'discover.com') ||
+						shExpMatch(host, '*.discovercard.com') || shExpMatch(host, 'discovercard.com') || dnsDomainIs(host, '.discovercard.com') || dnsDomainIs(host, 'discovercard.com') ||
+						shExpMatch(host, '*.discoverbank.com') || shExpMatch(host, 'discoverbank.com') || dnsDomainIs(host, '.discoverbank.com') || dnsDomainIs(host, 'discoverbank.com') ||
+						shExpMatch(host, '*.myuhc.com') || shExpMatch(host, 'myuhc.com') || dnsDomainIs(host, '.myuhc.com') || dnsDomainIs(host, 'myuhc.com') ||
+						shExpMatch(host, '*.ring.com') || shExpMatch(host, 'ring.com') || dnsDomainIs(host, '.ring.com') || dnsDomainIs(host, 'ring.com') ||
+						shExpMatch(host, '*.freereadingprogram.com') || shExpMatch(host, 'freereadingprogram.com') || dnsDomainIs(host, '.freereadingprogram.com') || dnsDomainIs(host, 'freereadingprogram.com') ||
+						shExpMatch(host, '*.learnwithesa.com') || shExpMatch(host, 'learnwithesa.com') || dnsDomainIs(host, '.learnwithesa.com') || dnsDomainIs(host, 'learnwithesa.com') ||
+						shExpMatch(host, '*.fonts.gstatic.com') || shExpMatch(host, 'fonts.gstatic.com') || dnsDomainIs(host, '.fonts.gstatic.com') || dnsDomainIs(host, 'fonts.gstatic.com') ||
+						shExpMatch(host, '*.liveupdate.symantec.com') || shExpMatch(host, 'liveupdate.symantec.com') || dnsDomainIs(host, '.liveupdate.symantec.com') || dnsDomainIs(host, 'liveupdate.symantec.com') ||
+						shExpMatch(host, '*.liveupdate.symantecliveupdate.com') || shExpMatch(host, 'liveupdate.symantecliveupdate.com') || dnsDomainIs(host, '.liveupdate.symantecliveupdate.com') || dnsDomainIs(host, 'liveupdate.symantecliveupdate.com') ||
+						shExpMatch(host, '*.avagoext.okta.com') || shExpMatch(host, 'avagoext.okta.com') || dnsDomainIs(host, '.avagoext.okta.com') || dnsDomainIs(host, 'avagoext.okta.com') ||
+						shExpMatch(host, '*.avs-avpg.crsi.symantec.com') || shExpMatch(host, 'avs-avpg.crsi.symantec.com') || dnsDomainIs(host, '.avs-avpg.crsi.symantec.com') || dnsDomainIs(host, 'avs-avpg.crsi.symantec.com') ||
+						shExpMatch(host, '*.bash-avpg.crsi.symantec.com') || shExpMatch(host, 'bash-avpg.crsi.symantec.com') || dnsDomainIs(host, '.bash-avpg.crsi.symantec.com') || dnsDomainIs(host, 'bash-avpg.crsi.symantec.com') ||
+						shExpMatch(host, '*.bds.securitycloud.symantec.com') || shExpMatch(host, 'bds.securitycloud.symantec.com') || dnsDomainIs(host, '.bds.securitycloud.symantec.com') || dnsDomainIs(host, 'bds.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.central.avsi.symantec.com') || shExpMatch(host, 'central.avsi.symantec.com') || dnsDomainIs(host, '.central.avsi.symantec.com') || dnsDomainIs(host, 'central.avsi.symantec.com') ||
+						shExpMatch(host, '*.central.b6.crsi.symantec.com') || shExpMatch(host, 'central.b6.crsi.symantec.com') || dnsDomainIs(host, '.central.b6.crsi.symantec.com') || dnsDomainIs(host, 'central.b6.crsi.symantec.com') ||
+						shExpMatch(host, '*.central.crsi.symantec.com') || shExpMatch(host, 'central.crsi.symantec.com') || dnsDomainIs(host, '.central.crsi.symantec.com') || dnsDomainIs(host, 'central.crsi.symantec.com') ||
+						shExpMatch(host, '*.central.nrsi.symantec.com') || shExpMatch(host, 'central.nrsi.symantec.com') || dnsDomainIs(host, '.central.nrsi.symantec.com') || dnsDomainIs(host, 'central.nrsi.symantec.com') ||
+						shExpMatch(host, '*.central.ss.crsi.symantec.com') || shExpMatch(host, 'central.ss.crsi.symantec.com') || dnsDomainIs(host, '.central.ss.crsi.symantec.com') || dnsDomainIs(host, 'central.ss.crsi.symantec.com') ||
+						shExpMatch(host, '*.ent-shasta-mr-clean.symantec.com') || shExpMatch(host, 'ent-shasta-mr-clean.symantec.com') || dnsDomainIs(host, '.ent-shasta-mr-clean.symantec.com') || dnsDomainIs(host, 'ent-shasta-mr-clean.symantec.com') ||
+						shExpMatch(host, '*.ent-shasta-rrs.symantec.com') || shExpMatch(host, 'ent-shasta-rrs.symantec.com') || dnsDomainIs(host, '.ent-shasta-rrs.symantec.com') || dnsDomainIs(host, 'ent-shasta-rrs.symantec.com') ||
+						shExpMatch(host, '*.faults.qalabs.symantec.com') || shExpMatch(host, 'faults.qalabs.symantec.com') || dnsDomainIs(host, '.faults.qalabs.symantec.com') || dnsDomainIs(host, 'faults.qalabs.symantec.com') ||
+						shExpMatch(host, '*.faults.symantec.com') || shExpMatch(host, 'faults.symantec.com') || dnsDomainIs(host, '.faults.symantec.com') || dnsDomainIs(host, 'faults.symantec.com') ||
+						shExpMatch(host, '*.linux-repo.us.securitycloud.symantec.com') || shExpMatch(host, 'linux-repo.us.securitycloud.symantec.com') || dnsDomainIs(host, '.linux-repo.us.securitycloud.symantec.com') || dnsDomainIs(host, 'linux-repo.us.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.liveupdate.symantec.com') || shExpMatch(host, 'liveupdate.symantec.com') || dnsDomainIs(host, '.liveupdate.symantec.com') || dnsDomainIs(host, 'liveupdate.symantec.com') ||
+						shExpMatch(host, '*.liveupdate.symantecliveupdate.com') || shExpMatch(host, 'liveupdate.symantecliveupdate.com') || dnsDomainIs(host, '.liveupdate.symantecliveupdate.com') || dnsDomainIs(host, 'liveupdate.symantecliveupdate.com') ||
+						shExpMatch(host, '*.sep.securitycloud.symantec.com') || shExpMatch(host, 'sep.securitycloud.symantec.com') || dnsDomainIs(host, '.sep.securitycloud.symantec.com') || dnsDomainIs(host, 'sep.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.services-prod.symantec.com') || shExpMatch(host, 'services-prod.symantec.com') || dnsDomainIs(host, '.services-prod.symantec.com') || dnsDomainIs(host, 'services-prod.symantec.com') ||
+						shExpMatch(host, '*.sp.cwfservice.net') || shExpMatch(host, 'sp.cwfservice.net') || dnsDomainIs(host, '.sp.cwfservice.net') || dnsDomainIs(host, 'sp.cwfservice.net') ||
+						shExpMatch(host, '*.stnd-avpg.crsi.symantec.com') || shExpMatch(host, 'stnd-avpg.crsi.symantec.com') || dnsDomainIs(host, '.stnd-avpg.crsi.symantec.com') || dnsDomainIs(host, 'stnd-avpg.crsi.symantec.com') ||
+						shExpMatch(host, '*.stnd-ipsg.crsi.symantec.com') || shExpMatch(host, 'stnd-ipsg.crsi.symantec.com') || dnsDomainIs(host, '.stnd-ipsg.crsi.symantec.com') || dnsDomainIs(host, 'stnd-ipsg.crsi.symantec.com') ||
+						shExpMatch(host, '*.storage.googleapis.com') || shExpMatch(host, 'storage.googleapis.com') || dnsDomainIs(host, '.storage.googleapis.com') || dnsDomainIs(host, 'storage.googleapis.com') ||
+						shExpMatch(host, '*.telemetry.broadcom.com') || shExpMatch(host, 'telemetry.broadcom.com') || dnsDomainIs(host, '.telemetry.broadcom.com') || dnsDomainIs(host, 'telemetry.broadcom.com') ||
+						shExpMatch(host, '*.tses.broadcom.com') || shExpMatch(host, 'tses.broadcom.com') || dnsDomainIs(host, '.tses.broadcom.com') || dnsDomainIs(host, 'tses.broadcom.com') ||
+						shExpMatch(host, '*.tus1gwynwapex01.symantec.com') || shExpMatch(host, 'tus1gwynwapex01.symantec.com') || dnsDomainIs(host, '.tus1gwynwapex01.symantec.com') || dnsDomainIs(host, 'tus1gwynwapex01.symantec.com') ||
+						shExpMatch(host, '*.us.spoc.securitycloud.symantec.com') || shExpMatch(host, 'us.spoc.securitycloud.symantec.com') || dnsDomainIs(host, '.us.spoc.securitycloud.symantec.com') || dnsDomainIs(host, 'us.spoc.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.usea1.r3.securitycloud.symantec.com') || shExpMatch(host, 'usea1.r3.securitycloud.symantec.com') || dnsDomainIs(host, '.usea1.r3.securitycloud.symantec.com') || dnsDomainIs(host, 'usea1.r3.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.ws.securitycloud.symantec.com') || shExpMatch(host, 'ws.securitycloud.symantec.com') || dnsDomainIs(host, '.ws.securitycloud.symantec.com') || dnsDomainIs(host, 'ws.securitycloud.symantec.com') ||
+						shExpMatch(host, '*.www.broadcom.com') || shExpMatch(host, 'www.broadcom.com') || dnsDomainIs(host, '.www.broadcom.com') || dnsDomainIs(host, 'www.broadcom.com') ||
+						shExpMatch(host, '*.www.symantec.com') || shExpMatch(host, 'www.symantec.com') || dnsDomainIs(host, '.www.symantec.com') || dnsDomainIs(host, 'www.symantec.com') ||
+						shExpMatch(host, '*.gstatic.com') || shExpMatch(host, 'gstatic.com') || dnsDomainIs(host, '.gstatic.com') || dnsDomainIs(host, 'gstatic.com') ||
+						shExpMatch(host, '*.googleapis.com') || shExpMatch(host, 'googleapis.com') || dnsDomainIs(host, '.googleapis.com') || dnsDomainIs(host, 'googleapis.com') ||
+						shExpMatch(host, '*.cdnjs.cloudflare.com') || shExpMatch(host, 'cdnjs.cloudflare.com') || dnsDomainIs(host, '.cdnjs.cloudflare.com') || dnsDomainIs(host, 'cdnjs.cloudflare.com') ||
+						shExpMatch(host, '*.use.fontawesome.com') || shExpMatch(host, 'use.fontawesome.com') || dnsDomainIs(host, '.use.fontawesome.com') || dnsDomainIs(host, 'use.fontawesome.com') ||
+						shExpMatch(host, '*.ubembed.com') || shExpMatch(host, 'ubembed.com') || dnsDomainIs(host, '.ubembed.com') || dnsDomainIs(host, 'ubembed.com') ||
+						shExpMatch(host, '*.driftt.com') || shExpMatch(host, 'driftt.com') || dnsDomainIs(host, '.driftt.com') || dnsDomainIs(host, 'driftt.com') ||
+						shExpMatch(host, '*.cdn.jsdelivr.net') || shExpMatch(host, 'cdn.jsdelivr.net') || dnsDomainIs(host, '.cdn.jsdelivr.net') || dnsDomainIs(host, 'cdn.jsdelivr.net') ||
+						shExpMatch(host, '*.unpkg.com') || shExpMatch(host, 'unpkg.com') || dnsDomainIs(host, '.unpkg.com') || dnsDomainIs(host, 'unpkg.com') ||
+						shExpMatch(host, '*.fast.wistia.com') || shExpMatch(host, 'fast.wistia.com') || dnsDomainIs(host, '.fast.wistia.com') || dnsDomainIs(host, 'fast.wistia.com') ||
+						shExpMatch(host, '*.vzw.com') || shExpMatch(host, 'vzw.com') || dnsDomainIs(host, '.vzw.com') || dnsDomainIs(host, 'vzw.com') ||
+						shExpMatch(host, '*.verizon.com') || shExpMatch(host, 'verizon.com') || dnsDomainIs(host, '.verizon.com') || dnsDomainIs(host, 'verizon.com') ||
+						shExpMatch(host, '*.verizonwireless.com') || shExpMatch(host, 'verizonwireless.com') || dnsDomainIs(host, '.verizonwireless.com') || dnsDomainIs(host, 'verizonwireless.com') ||
+						shExpMatch(host, '*.lalilo.com') || shExpMatch(host, 'lalilo.com') || dnsDomainIs(host, '.lalilo.com') || dnsDomainIs(host, 'lalilo.com') ||
+						shExpMatch(host, '*.lalilo.us') || shExpMatch(host, 'lalilo.us') || dnsDomainIs(host, '.lalilo.us') || dnsDomainIs(host, 'lalilo.us') ||
+						shExpMatch(host, '*.launchdarkly.com') || shExpMatch(host, 'launchdarkly.com') || dnsDomainIs(host, '.launchdarkly.com') || dnsDomainIs(host, 'launchdarkly.com') ||
+						shExpMatch(host, '*.msftconnecttest.com') || shExpMatch(host, 'msftconnecttest.com') || dnsDomainIs(host, '.msftconnecttest.com') || dnsDomainIs(host, 'msftconnecttest.com') ||
+						shExpMatch(host, '*.lamersfam.com') || shExpMatch(host, 'lamersfam.com') || dnsDomainIs(host, '.lamersfam.com') || dnsDomainIs(host, 'lamersfam.com') ||
+						shExpMatch(host, '*.events.data.microsoft.com') || shExpMatch(host, 'events.data.microsoft.com') || dnsDomainIs(host, '.events.data.microsoft.com') || dnsDomainIs(host, 'events.data.microsoft.com') ||
+						shExpMatch(host, '*.ipv6.msftconnecttest.com') || shExpMatch(host, 'ipv6.msftconnecttest.com') || dnsDomainIs(host, '.ipv6.msftconnecttest.com') || dnsDomainIs(host, 'ipv6.msftconnecttest.com') ||
+						shExpMatch(host, '*.www.lamersfam.com')
 						)
 					{
 						return "DIRECT";
@@ -688,34 +773,6 @@ function FindProxyForURL(url, host)
 					{
 						return "DIRECT";
 					}
-
-					// ALLOW DIRECT CONNECT IF ONE OF BELOW IPS (WHITELIST THE BELOW IPS)
-					if (isInNet(myIpAddress(), "10.40.162.61", "255.255.255.255") || 
-						isInNet(myIpAddress(), "10.40.162.62", "255.255.255.255") ||  
-						isInNet(myIpAddress(), "10.40.162.63", "255.255.255.255") ||  
-						isInNet(myIpAddress(), "10.40.162.65", "255.255.255.255") ||  
-						isInNet(myIpAddress(), "10.40.162.66", "255.255.255.255") ||  
-						isInNet(myIpAddress(), "10.40.162.61", "255.255.255.255") || 
-						isInNet(myIpAddress(), "10.40.162.61", "255.255.255.255"))
-					{
-						normal = "DIRECT";
-					}
-
-
-					// ALLOW DIRECT CONNECT AS LONG AS WE ARE NOT ONE OF THE BELOW IPS (Not perfered method) 
-//					if (!isInNet(myIpAddress(), "10.40.162.102", "255.255.255.255") && 
-//						!isInNet(myIpAddress(), "10.40.162.103", "255.255.255.255") &&
-//						!isInNet(myIpAddress(), "10.40.162.104", "255.255.255.255"))
-//					{
-//						normal = "DIRECT";
-//					}
-//
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-// ****************************************************************************************************************************************************************************************************************************************************************************************************************************
-//
-    //DEBUG alert("checking: url=" + url);
 
     // Excellent kludge from Sean M. Burke:
     // Enable or disable no-ads for the current browser session.
@@ -790,13 +847,6 @@ function FindProxyForURL(url, host)
   	//	|| dnsDomainIs(host, "schooner.com")
 	// or for a single host
 	//	|| (host == "some-host-name")
-
-		// Added By Aaron - MSDN Clone
-	  || shExpMatch(host, '*.rg-adguard.net') || shExpMatch(host, 'rg-adguard.net') || dnsDomainIs(host, '.rg-adguard.net') || dnsDomainIs(host, 'rg-adguard.net')
-		// Added By Aaron - ADT
-	  // || shExpMatch(host, '*.adt.com') || shExpMatch(host, 'adt.com') || dnsDomainIs(host, '.adt.com') || dnsDomainIs(host, 'adt.com')
-		// Added By Aaron - EasyPeasy Banner
-	  || shExpMatch(host, '*.lamersfam.com') || shExpMatch(host, 'lamersfam.com') || dnsDomainIs(host, '.lamersfam.com') || dnsDomainIs(host, 'lamersfam.com')
 
 	// Note: whitelisting schooner.com will defeat the "is-it-working"
 	// test page at http://www.schooner.com/~loverso/no-ads/ads/
@@ -1780,3 +1830,4 @@ function _dnsDomainIs(host, domain) {
 	//rightmedia.net
 	//calloffate.com
 	//fairmeasures.com
+
